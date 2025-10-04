@@ -31,23 +31,24 @@ describe('_generate_token_id', () => {
 
 describe('Task.parse', () => {
   it('parses minimal task', () => {
-    expect(Task.parse("- open")).toEqual(new Task({ name: "open" }))
+    expect(Task.parse("- open")).toEqual(new Task({dash:"-", name: "open" }))
   })
 
   it('parses task with duration', () => {
-    expect(Task.parse("- 10 open")).toEqual(new Task({ duration: new Duration(10), name: "open" }))
+    expect(Task.parse("- 10 open")).toEqual(new Task({dash:"-", duration: new Duration(10), name: "open" }))
   })
 
   it('parses task with duration and info', () => {
-    expect(Task.parse("- 10 open info")).toEqual(new Task({ duration: new Duration(10), name: "open", info: "info" }))
+    expect(Task.parse("- 10 open info")).toEqual(new Task({dash:"-", duration: new Duration(10), name: "open", info: "info" }))
   })
 
   it('parses task with completion status', () => {
-    expect(Task.parse("- [ ] 10 open")).toEqual(new Task({ is_completed: false, duration: new Duration(10), name: "open" }))
+    expect(Task.parse("- [ ] 10 open")).toEqual(new Task({dash:"-", is_completed: false, duration: new Duration(10), name: "open" }))
   })
 
   it('parses task with time and completion', () => {
     expect(Task.parse("- [x] 15:30 10 open")).toEqual(new Task({
+      dash:"-",
       is_completed: true,
       time: Time.parse("15:30"),
       duration: new Duration(10),
@@ -57,6 +58,7 @@ describe('Task.parse', () => {
 
   it('parses task with group', () => {
     expect(Task.parse("- [x] 15:30 10 open @group")).toEqual(new Task({
+      dash:"-",
       is_completed: true,
       time: Time.parse("15:30"),
       duration: new Duration(10),
@@ -67,6 +69,7 @@ describe('Task.parse', () => {
 
   it('parses task with group and info', () => {
     expect(Task.parse("- [x] 15:30 10 open @group info info")).toEqual(new Task({
+      dash:"-",
       is_completed: true,
       time: Time.parse("15:30"),
       duration: new Duration(10),

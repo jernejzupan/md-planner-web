@@ -1,3 +1,11 @@
+# 2025-10-04
+
+I did a hard reset and I wiped my journal.
+But it's not that bad. I already had an elaborate plan.
+But it's a lot of effort so I'll first make the change.
+Since the plan is not embedded in markdown I lift the requirement to start with `-`.
+But now I need to keep track of this.
+
 # 2025-09-22
 
 I asked copilot, if I can use custom elements inside a text box.

@@ -3,6 +3,7 @@ import { Time } from '@/lib/Timing.js';
 
 export class Task {
     constructor({
+        dash = null,
         is_completed = null,
         time = null,
         duration = null,
@@ -11,6 +12,7 @@ export class Task {
         info = null,
         children = []
     } = {}) {
+        this.dash = dash;
         this.is_completed = is_completed;
         this.time = time;
         this.duration = duration;
@@ -21,6 +23,7 @@ export class Task {
     }
 
     fmt(clean = false) {
+        const dash = this.dash === null ? "" : "-";
         const is_completed = this.is_completed === null ? "" : this.is_completed ? " [x]" : " [ ]";
         let time = this.time ? " " + this.time.fmt() : "";
         if (clean && time.startsWith(" *")) time = "";
@@ -29,7 +32,7 @@ export class Task {
         const name = this.name ? " " + this.name : " ";
         const group = this.group ? " @" + this.group : "";
         const info = this.info ? " " + this.info : "";
-        return `-${is_completed}${time}${duration}${name}${group}${info}`;
+        return `${dash}${is_completed}${time}${duration}${name}${group}${info}`;
     }
 
     update() {
@@ -115,7 +118,7 @@ export class Task {
 const regexCompleted = /^\[(.*)\]$/;
 const regexName = /^[a-zA-Z0-9>\-:]+$/;
 const regexGroup = /^@[a-zA-Z0-9\-:]+$/;
-const regexTaskTokenIds = /^-c?[tT]?[dD]?n?g?o*$/;
+const regexTaskTokenIds = /^-?c?[tT]?[dD]?n?g?o*$/;
 const regexNameSub = /[ctTdDn]/;
 
 function tokenType(idx, tokenStr) {
@@ -169,6 +172,7 @@ export function _parse_task(line) {
     }
 
     const tokens = taskStr.split(" ");
+    let dash = null;
     let is_completed = null;
     let time = null;
     let duration = null;
@@ -178,6 +182,7 @@ export function _parse_task(line) {
 
     tokens.forEach((tokenStr, i) => {
         const tokenId = tokenIds[i];
+        if (tokenId === "-") dash = "-"
         if (tokenId === "c") is_completed = regexCompleted.exec(tokenStr)[1] === "x";
         if (tokenId === "t") time = Time.parse(tokenStr);
         if (tokenId === "d") duration = Duration.parse(tokenStr);
@@ -188,5 +193,5 @@ export function _parse_task(line) {
 
     info = info.trim() || null;
 
-    return new Task({ is_completed, time, duration, group, name, info });
+    return new Task({ dash, is_completed, time, duration, group, name, info });
 }
