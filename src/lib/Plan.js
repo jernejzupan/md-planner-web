@@ -66,7 +66,7 @@ function _parse_tasks(lines) {
 function _generate_plan_text(tasks, indent = 0, clean = false) {
     const lines = [];
     for (const task of tasks) {
-        lines.push("  ".repeat(indent) + task.fmt(clean) + "\n");
+        lines.push("\t".repeat(indent) + task.fmt(clean) + "\n");
         if (task.children?.length) {
             lines.push(..._generate_plan_text(task.children, indent + 1, clean));
         }

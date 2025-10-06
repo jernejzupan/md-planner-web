@@ -25,6 +25,8 @@
 import { ref } from 'vue'
 import { Plan } from '@/lib/Plan.js'
 
+
+
 const savedText = localStorage.getItem('inputText') ?? "";
 const inputText = ref(savedText)
 const outputText = ref('')
@@ -39,6 +41,8 @@ function updateOutput() {
     outputText.value = 'Error parsing plan: ' + err.message
   }
 }
+
+updateOutput();
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 import { Duration } from '@/lib/Duration.js';
 
-const regexTime = /^\d{1,2}:\d{2}$/;
+const regexTime = /^\d{1,2}[:.]\d{2}$/;
 
 export class Time {
     constructor(date, derived = false) {
@@ -12,7 +12,8 @@ export class Time {
         const hours = this.time.getHours().toString().padStart(2, '0');
         const minutes = this.time.getMinutes().toString().padStart(2, '0');
         const timeStr = `${hours}:${minutes}`;
-        return this.derived ? `*${timeStr}*` : timeStr;
+        return this.derived ? timeStr.replace(":",".") : timeStr;
+        //return this.derived ? ` ${timeStr} ` : `*${timeStr}*`;
     }
 
     add(duration) {
@@ -40,6 +41,7 @@ export class Time {
 
     static parse(text) {
         if (regexTime.test(text)) {
+            text = text.replace(".", ":");
             const [hours, minutes] = text.split(':').map(Number);
             const now = new Date();
             now.setHours(hours, minutes, 0, 0);
@@ -49,6 +51,11 @@ export class Time {
     }
 
     static isValid(text) {
+        //console.log(`Time.isValid(${text})`, regexTime.test(text))
         return regexTime.test(text);
+    }
+
+    static isDerived(text) {
+        return text.includes(".");
     }
 }

@@ -1,3 +1,22 @@
+# 2025-10-06
+
+I made some changes:
+- the input text is persisted
+- dash is now optional
+- derived time is separated with a dot
+- parts of the task are now separated with tabs
+
+Example output:
+06.30	55	traveling 
+	06.30	5	pack 
+	06.35	10	bike 
+	06:45	30	train 
+	07.15	10	walk 
+	07.25		arrive
+
+Tests are broken at the moment.
+I think an easy way to fix things is to add functions that can transform the data. E.g. compact or clean.
+
 # 2025-10-04
 
 I did a hard reset and I wiped my journal.

@@ -23,16 +23,31 @@ export class Task {
     }
 
     fmt(clean = false) {
-        const dash = this.dash === null ? "" : "-";
-        const is_completed = this.is_completed === null ? "" : this.is_completed ? " [x]" : " [ ]";
-        let time = this.time ? " " + this.time.fmt() : "";
-        if (clean && time.startsWith(" *")) time = "";
-        let duration = this.duration ? " " + this.duration.fmt() : "";
-        if (duration === " 0") duration = "";
-        const name = this.name ? " " + this.name : " ";
-        const group = this.group ? " @" + this.group : "";
-        const info = this.info ? " " + this.info : "";
-        return `${dash}${is_completed}${time}${duration}${name}${group}${info}`;
+        let is_completed = this.is_completed === null ? null : this.is_completed ? "[x]" : "[ ]";
+        let time = this.time?.fmt() ?? null;
+        let duration = this.duration?.fmt() ?? null;
+        duration = duration === "0" ? null : duration;
+        let group = this.group ? "@"+this.group : null;
+        let res = [
+            this.dash,
+            is_completed,
+            time,
+            duration,
+            this.name,
+            group,
+            this.info
+        ].reduce((out, value, index) => {
+            let separator = [2,3].includes(index) ? "\t" : " ";
+            if (value===null && out!=="" && separator==="\t") {
+                return out+separator
+            }
+            if (value===null) return out;
+            return out + value + separator;
+        }, "")
+
+        return res;
+        
+        
     }
 
     update() {
@@ -125,15 +140,9 @@ function tokenType(idx, tokenStr) {
     if (tokenStr === "-" && idx === 0) return "-";
     if (idx > 5) return "o";
 
-    let derived = false;
-    if (tokenStr.startsWith("*") && tokenStr.endsWith("*")) {
-        tokenStr = tokenStr.slice(1, -1);
-        derived = true;
-    }
-
     if (regexCompleted.test(tokenStr)) return "c";
-    if (Time.isValid(tokenStr)) return derived ? "T" : "t";
-    if (Duration.isValid(tokenStr)) return derived ? "D" : "d";
+    if (Time.isValid(tokenStr)) return Time.isDerived(tokenStr) ? "T" : "t";
+    if (Duration.isValid(tokenStr)) return "d";
     if (regexName.test(tokenStr)) return "n";
     if (regexGroup.test(tokenStr)) return "g";
 
@@ -142,8 +151,12 @@ function tokenType(idx, tokenStr) {
 
 export function _generate_token_id(taskStr) {
     taskStr = taskStr.trim().replace("[ ]", "[e]");
-    const tokens = taskStr.split(" ");
-    const tokenString = tokens.map((t, i) => tokenType(i, t)).join("");
+    const tokens = taskStr.split(/\s+/);
+    const tokenString = tokens.map((t, i) => {
+        const tt = tokenType(i, t);
+        //console.log(`tokenType(${i},${t}) -> ${tt}`);
+        return tt;
+    }).join("");
 
     const idx = tokenString.indexOf("n");
     let before = tokenString;
@@ -160,9 +173,6 @@ export function _generate_token_id(taskStr) {
     return before + separator + cleanedAfter;
 }
 
-
-
-
 export function _parse_task(line) {
     const taskStr = line.trim().replace("[ ]", "[e]");
     const tokenIds = _generate_token_id(taskStr);
@@ -171,7 +181,8 @@ export function _parse_task(line) {
         return null;
     }
 
-    const tokens = taskStr.split(" ");
+    const tokens = taskStr.split(/\s+/);
+    //console.log(tokens)
     let dash = null;
     let is_completed = null;
     let time = null;
