@@ -2,12 +2,12 @@
   <div class="plan-editor">
     <h2>Plan Input</h2>
     <div style="display: flex;  gap: 8px;">
-    <button @click="swapLineButton('down')">▼</button>
-    <button @click="swapLineButton('up')">▲</button>
-    <button @click="adjustIndentationButton('out')">◀</button>
-    <button @click="adjustIndentationButton('in')">▶</button>
-    <button @click="adjustNumberNearCursorButton(1)">+</button>
-    <button @click="adjustNumberNearCursorButton(-1)">-</button>
+    <button @mousedown.prevent="swapLineButton('down')">▼</button>
+    <button @mousedown.prevent="swapLineButton('up')">▲</button>
+    <button @mousedown.prevent="adjustIndentationButton('out')">◀</button>
+    <button @mousedown.prevent="adjustIndentationButton('in')">▶</button>
+    <button @mousedown.prevent="adjustNumberNearCursorButton(1)">+</button>
+    <button @mousedown.prevent="adjustNumberNearCursorButton(-1)">-</button>
     </div>
     <textarea
       ref="textarea"
