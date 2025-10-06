@@ -25,10 +25,12 @@
 import { ref } from 'vue'
 import { Plan } from '@/lib/Plan.js'
 
-const inputText = ref('')
+const savedText = localStorage.getItem('inputText') ?? "";
+const inputText = ref(savedText)
 const outputText = ref('')
 
 function updateOutput() {
+  localStorage.setItem('inputText', inputText.value);
   try {
     const plan = Plan.from_str(inputText.value)
     plan.update()
