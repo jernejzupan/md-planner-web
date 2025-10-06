@@ -1,6 +1,6 @@
 <template>
   <div class="plan-editor">
-    <h2>Plan Input</h2>
+    <!-- <h2>Plan Input</h2> -->
     <div style="display: flex;  gap: 8px;">
     <button @mousedown.prevent="swapLineButton('down')">▼</button>
     <button @mousedown.prevent="swapLineButton('up')">▲</button>
@@ -14,13 +14,11 @@
       v-model="inputText"
       @input="updateOutput"
       @keydown="keyDown"
-      rows="15"
+      rows="8"
       cols="60"
       spellcheck="false"
       placeholder="Paste your plan here..."
     ></textarea>
-
-    <h2>Formatted Output</h2>
     <textarea
       :value="outputText"
       readonly
