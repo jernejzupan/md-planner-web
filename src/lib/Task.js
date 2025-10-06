@@ -43,7 +43,7 @@ export class Task {
             }
             if (value===null) return out;
             return out + value + separator;
-        }, "")
+        }, "").trimEnd();
 
         return res;
         
