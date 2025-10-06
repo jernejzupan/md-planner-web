@@ -89,13 +89,13 @@ function keyDown(event) {
     updateOutput();
     event.preventDefault();
   }
-  else if (event.ctrlKey && event.altKey && event.key === 'ArrowUp') {
-    adjustNumberNearCursor(textarea.value, 10);
+  else if (event.ctrlKey && event.shiftKey && event.key === 'ArrowUp') {
+    adjustNumberNearCursor(textarea.value, 5);
     updateOutput();
     event.preventDefault();
   }
-  else if (event.ctrlKey && event.altKey && event.key === 'ArrowDown') {
-    adjustNumberNearCursor(textarea.value, -10);
+  else if (event.ctrlKey && event.shiftKey && event.key === 'ArrowDown') {
+    adjustNumberNearCursor(textarea.value, -5);
     updateOutput();
     event.preventDefault();
   }
@@ -246,36 +246,36 @@ function adjustNumberNearCursor(textarea, n) {
   const value = textarea.value;
   const cursorPos = textarea.selectionStart;
 
-  // Regex to find number near cursor
   const numberRegex = /\d+/g;
   let match;
-  let targetStart = -1;
-  let targetEnd = -1;
+  let closestMatch = null;
+  let closestDistance = Infinity;
 
   while ((match = numberRegex.exec(value)) !== null) {
     const start = match.index;
     const end = start + match[0].length;
 
-    if (cursorPos >= start - 1 && cursorPos <= end + 1) {
-      targetStart = start;
-      targetEnd = end;
-      break;
+    // Compute distance from cursor to center of the number
+    const center = (start + end) / 2;
+    const distance = Math.abs(cursorPos - center);
+
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestMatch = match;
     }
   }
 
-  if (targetStart === -1) return; // no number found near cursor
+  if (!closestMatch) return;
 
-  const originalNumber = parseInt(value.slice(targetStart, targetEnd), 10);
+  const start = closestMatch.index;
+  const end = start + closestMatch[0].length;
+  const originalNumber = parseInt(closestMatch[0], 10);
   const newNumber = Math.max(0, originalNumber + n);
 
-  const newValue =
-    value.slice(0, targetStart) +
-    newNumber +
-    value.slice(targetEnd);
-
+  const newValue = value.slice(0, start) + newNumber + value.slice(end);
   inputText.value = newValue;
 
-  // Restore cursor position after update
+  // Adjust cursor position
   const offset = newNumber.toString().length - originalNumber.toString().length;
   const newCursorPos = cursorPos + offset;
 
@@ -309,5 +309,7 @@ button {
   border-width: 0;
   border-radius: 4px;
   width: 2.8rem;
+  touch-action: manipulation;
+  user-select: none;
 }
 </style>
