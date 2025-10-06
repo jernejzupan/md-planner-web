@@ -51,6 +51,7 @@ function updateOutput() {
 
 function swapLineButton(direction) {
   performSwap(textarea.value, direction);
+  updateOutput();
 
   // Restore focus to textarea
   setTimeout(() => {
@@ -60,6 +61,7 @@ function swapLineButton(direction) {
 
 function adjustIndentationButton(direction) {
   adjustIndentation(textarea.value, direction);
+  updateOutput();
 
   // Restore focus to textarea
   setTimeout(() => {
@@ -69,6 +71,7 @@ function adjustIndentationButton(direction) {
 
 function adjustNumberNearCursorButton(n) {
   adjustNumberNearCursor(textarea.value, n);
+  updateOutput();
 
   // Restore focus to textarea
   setTimeout(() => {
